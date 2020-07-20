@@ -11,9 +11,10 @@ import requests
 def get_coordinates():
     """return currant coordinates of ISS."""
     data = requests.get('http://api.open-notify.org/iss-now.json').json()
+    ts = time.ctime(data['timestamp'])
     lat = data['iss_position']['latitude']
     lon = data['iss_position']['longitude']
-    return lat, lon
+    return lat, lon, ts
 
 
 def set_map():
@@ -35,11 +36,12 @@ def set_map():
 
 def move_iss(iss, world_map):
     """move ISS to currant location"""
-    lat, lon = get_coordinates()
+    lat, lon, ts = get_coordinates()
     lat_lon_coords = float(lon), float(lat)
     iss.setpos(lat_lon_coords)
     iss.pencolor('white')
     iss.pendown()
+    iss.write(ts, font=('Courier', 14, 'bold'), align='left')
 
 
 def over_indy():
